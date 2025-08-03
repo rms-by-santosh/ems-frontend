@@ -8,6 +8,7 @@ export function AuthProvider({ children }) {
     const savedUser = localStorage.getItem("user");
     return savedUser ? JSON.parse(savedUser) : null;
   });
+
   const [token, setToken] = useState(() => localStorage.getItem("token") || null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -32,12 +33,12 @@ export function AuthProvider({ children }) {
     }
   }, [user]);
 
-  // Login function: sends credentials to backend and stores token & user
+  // ✅ FIXED: Correct login endpoint
   const login = async (username, password) => {
     setLoading(true);
     setError("");
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/users/login`, {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/login`, {
         username,
         password,
       });
