@@ -1,0 +1,285 @@
+/* home page */
+/* Base Styles */
+.home-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+/* Header Styles */
+.header-section {
+  text-align: center;
+  margin-bottom: 3rem;
+  animation: fadeIn 0.8s ease-out;
+}
+
+.home-title {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: #4361ee;
+  font-weight: 700;
+}
+
+.welcome-message {
+  font-size: 1.2rem;
+  color: #6c757d;
+}
+
+.user-name {
+  font-weight: 600;
+  color: #4361ee;
+}
+
+.user-role {
+  font-weight: 600;
+  color: #4895ef;
+  text-transform: capitalize;
+}
+
+.login-prompt {
+  font-size: 1.2rem;
+  color: #6c757d;
+}
+
+/* Activity Section Styles */
+.activity-section {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  margin-top: 2rem;
+  animation: slideUp 0.6s ease-out;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.section-title {
+  font-size: 1.8rem;
+  color: #4361ee;
+}
+
+.activity-count {
+  background: #4895ef;
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* Activity List Styles */
+.activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.activity-item {
+  display: flex;
+  gap: 1.5rem;
+  animation: fadeIn 0.5s ease-out;
+  transition: all 0.3s ease;
+}
+
+.activity-item:hover {
+  transform: translateX(5px);
+}
+
+.activity-timeline {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.activity-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #4895ef;
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+}
+
+.activity-line {
+  flex-grow: 1;
+  width: 2px;
+  background: #adb5bd;
+  opacity: 0.3;
+  margin-top: 0.5rem;
+}
+
+.activity-content {
+  flex-grow: 1;
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 1.2rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.activity-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.activity-action {
+  font-weight: 600;
+  color: #4361ee;
+  text-transform: capitalize;
+}
+
+.activity-user {
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+.activity-desc {
+  margin-bottom: 0.5rem;
+  color: #212529;
+}
+
+.activity-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.activity-date {
+  font-size: 0.8rem;
+  color: #6c757d;
+}
+
+/* Loading Styles */
+.loading-animation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  gap: 1rem;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top-color: #4361ee;
+  animation: spin 1s linear infinite;
+}
+
+/* Empty State Styles */
+.no-activity {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  color: #6c757d;
+}
+
+.empty-icon {
+  width: 60px;
+  height: 60px;
+  fill: #6c757d;
+  opacity: 0.5;
+}
+
+/* Error Message Styles */
+.error-message {
+  background: #f72585;
+  color: white;
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+  text-align: center;
+  animation: shake 0.5s ease;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-5px); }
+  40%, 80% { transform: translateX(5px); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .home-title {
+    font-size: 2rem;
+  }
+  
+  .activity-section {
+    padding: 1.5rem;
+  }
+  
+  .activity-item {
+    gap: 1rem;
+  }
+  
+  .activity-content {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-container {
+    padding: 1.5rem 1rem;
+  }
+  
+  .home-title {
+    font-size: 1.8rem;
+  }
+  
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .activity-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+  }
+  
+  .activity-footer {
+    justify-content: flex-start;
+  }
+}
+
+
+/* home end */

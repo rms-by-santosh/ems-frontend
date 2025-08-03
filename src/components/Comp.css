@@ -1,0 +1,138 @@
+.header {
+  --primary-color: #0066cc;
+  --secondary-color: #004d99;
+  
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.header__brand {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header__logo {
+  height: 42px;
+  transition: transform 0.3s ease;
+}
+
+.header__logo:hover {
+  transform: rotate(-5deg) scale(1.1);
+}
+
+.header__title {
+  margin: 0;
+  font-size: 1.5rem;
+  background: linear-gradient(to right, #fff, #cce0ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.header__actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.header__button {
+  background: rgba(255,255,255,0.1);
+  border: none;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.header__button:hover {
+  background: rgba(255,255,255,0.2);
+  transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header {
+    padding: 0.8rem;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .header__title {
+    font-size: 1.3rem;
+  }
+}
+
+
+
+/* 
+
+*/
+
+.navbar {
+  background: #0073e6;
+  padding: 0.8rem 2rem;
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.navbar__link {
+  color: #cce0ff;
+  text-decoration: none;
+  padding: 0.3rem 0;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.navbar__link:hover {
+  color: white;
+}
+
+.navbar__link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: white;
+  transition: width 0.3s ease;
+}
+
+.navbar__link:hover::after {
+  width: 100%;
+}
+
+.navbar__link--admin {
+  color: #ffcc00;
+}
+
+/* Active Link */
+.navbar__link.active {
+  color: white;
+  font-weight: bold;
+}
+
+.navbar__link.active::after {
+  width: 100%;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 0.8rem;
+    gap: 1rem;
+    justify-content: center;
+  }
+}

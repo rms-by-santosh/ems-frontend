@@ -1,0 +1,241 @@
+/* Base Styles */
+.countries-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  min-height: 100vh;
+}
+
+/* Header Styles */
+.countries-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.countries-title {
+  font-size: 2rem;
+  color: #4361ee;
+  margin: 0;
+}
+
+.header-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.add-country-btn {
+  background-color: #4361ee;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.add-country-btn:hover {
+  background-color: #3f37c9;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Table Styles */
+.countries-table-container {
+  overflow-x: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 1rem;
+}
+
+.countries-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+}
+
+.countries-table th,
+.countries-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.countries-table th {
+  background-color: #4361ee;
+  color: white;
+  font-weight: 600;
+  position: sticky;
+  top: 0;
+}
+
+.country-row {
+  transition: all 0.3s ease;
+}
+
+.country-row:hover {
+  background-color: rgba(72, 149, 239, 0.1);
+}
+
+.actions-cell {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.action-link {
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.view-link {
+  color: #4361ee;
+  border: 1px solid #4361ee;
+  background-color: transparent;
+}
+
+.view-link:hover {
+  background-color: #4361ee;
+  color: white;
+}
+
+.edit-link {
+  color: #f8961e;
+  border: 1px solid #f8961e;
+  background-color: transparent;
+}
+
+.edit-link:hover {
+  background-color: #f8961e;
+  color: white;
+}
+
+/* Empty State Styles */
+.empty-row td {
+  text-align: center;
+  padding: 2rem;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  color: #adb5bd;
+}
+
+.empty-icon {
+  width: 48px;
+  height: 48px;
+  fill: #adb5bd;
+  opacity: 0.5;
+}
+
+/* Loading Styles */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  gap: 1rem;
+  min-height: 200px;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top-color: #4361ee;
+  animation: spin 1s linear infinite;
+}
+
+/* Error Message Styles */
+.error-message {
+  background-color: #f72585;
+  color: white;
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+  margin: 1rem 0;
+  animation: shake 0.5s ease;
+  max-width: 100%;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-5px); }
+  40%, 80% { transform: translateX(5px); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .countries-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .countries-title {
+    font-size: 1.75rem;
+  }
+
+  .countries-table th,
+  .countries-table td {
+    padding: 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  .actions-cell {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .countries-container {
+    padding: 1.5rem 1rem;
+  }
+
+  .countries-title {
+    font-size: 1.5rem;
+  }
+
+  .add-country-btn {
+    width: 100%;
+    text-align: center;
+    padding: 0.6rem;
+  }
+
+  .action-link {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  .empty-icon {
+    width: 36px;
+    height: 36px;
+  }
+}
