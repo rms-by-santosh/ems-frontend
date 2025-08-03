@@ -33,15 +33,15 @@ export function AuthProvider({ children }) {
     }
   }, [user]);
 
-  // ✅ FIXED: Correct login endpoint
+  // ✅ Correct login endpoint!
   const login = async (username, password) => {
     setLoading(true);
     setError("");
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/login`, {
-        username,
-        password,
-      });
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/users/login`,
+        { username, password }
+      );
       setUser(response.data.user);
       setToken(response.data.token);
       setLoading(false);
@@ -53,7 +53,6 @@ export function AuthProvider({ children }) {
     }
   };
 
-  // Logout function: clear user and token from state and storage
   const logout = () => {
     setUser(null);
     setToken(null);
