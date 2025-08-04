@@ -26,7 +26,7 @@ function getValidityClass(validity) {
 }
 
 // Table component
-function PCCRecordsTable({ title, records, search, setSearch }) {
+function PCCRecordsTable({ title, records, search, setSearch, onDelete, deletingId }) {
   return (
     <div className="table-section">
       <h3 className="section-title">{title}</h3>
@@ -66,7 +66,26 @@ function PCCRecordsTable({ title, records, search, setSearch }) {
                   <td className={getValidityClass(validity)}>{validity}</td>
                   <td>{registeredemail || "-"}</td>
                   <td>
-                    <Link to={`/pcc/edit/${_id}`} className="action-link">Edit</Link>
+                    <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                      <Link to={`/pcc/edit/${_id}`} className="action-link">Edit</Link>
+                      <span style={{ color: "#bbb" }}>|</span>
+                      <button
+                        className="action-link"
+                        onClick={() => onDelete(_id)}
+                        disabled={deletingId === _id}
+                        style={{
+                          color: "red",
+                          background: "none",
+                          border: "none",
+                          cursor: deletingId === _id ? "not-allowed" : "pointer",
+                          padding: 0,
+                          font: "inherit",
+                          textDecoration: "underline",
+                        }}
+                      >
+                        {deletingId === _id ? "Deleting..." : "Delete"}
+                      </button>
+                    </div>
                   </td>
                 </tr>
               );
@@ -82,6 +101,7 @@ export default function PCCRecords() {
   const [pccRecords, setPccRecords] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [deletingId, setDeletingId] = useState(null);
 
   // Search states for each table
   const [searchAll, setSearchAll] = useState("");
@@ -110,6 +130,24 @@ export default function PCCRecords() {
   useEffect(() => {
     fetchPCCRecords();
   }, []);
+
+  // Delete handler
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this PCC record?")) return;
+    setDeletingId(id);
+    try {
+      const token = localStorage.getItem("token");
+      await axios.delete(
+        `${import.meta.env.VITE_API_URL}/pcc/${id}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setPccRecords((prev) => prev.filter((rec) => rec._id !== id));
+    } catch (err) {
+      alert("Failed to delete PCC record.");
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   if (loading) return <p className="loading-text">Loading PCC records...</p>;
   if (error) return <p className="error-message">{error}</p>;
@@ -153,6 +191,8 @@ export default function PCCRecords() {
         records={filterBySearch(allRecords, searchAll)}
         search={searchAll}
         setSearch={setSearchAll}
+        onDelete={handleDelete}
+        deletingId={deletingId}
       />
 
       {/* Expired List Table */}
@@ -161,6 +201,8 @@ export default function PCCRecords() {
         records={filterBySearch(expiredRecords, searchExpired)}
         search={searchExpired}
         setSearch={setSearchExpired}
+        onDelete={handleDelete}
+        deletingId={deletingId}
       />
 
       {/* Reapply List Table */}
@@ -169,6 +211,8 @@ export default function PCCRecords() {
         records={filterBySearch(reapplyRecords, searchReapply)}
         search={searchReapply}
         setSearch={setSearchReapply}
+        onDelete={handleDelete}
+        deletingId={deletingId}
       />
     </div>
   );

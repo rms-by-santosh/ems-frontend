@@ -9,6 +9,7 @@ export default function RecordsList() {
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
+  const [deletingId, setDeletingId] = useState(null);
 
   const fetchRecords = async () => {
     try {
@@ -49,6 +50,38 @@ export default function RecordsList() {
       setFilteredRecords(filtered);
     }
   }, [searchTerm, records]);
+
+  // Only allow delete if progressStatus is "Flight Done" or "Cancelled Self"
+  const canDelete = (progressStatus) => {
+    const status = progressStatus?.toLowerCase() || "";
+    return status === "flight done" || status === "cancelled self";
+  };
+
+  const handleDelete = async (record, cannotDelete) => {
+    if (cannotDelete) {
+      alert("Cannot delete: Only records with 'Flight Done' or 'Cancelled Self' progress can be deleted.");
+      return;
+    }
+    if (!window.confirm("Are you sure you want to delete this record?")) return;
+    setDeletingId(record._id);
+    try {
+      const token = localStorage.getItem("token");
+      await axios.delete(
+        `${import.meta.env.VITE_API_URL}/records/${record._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setRecords((prev) => prev.filter((r) => r._id !== record._id));
+      setFilteredRecords((prev) => prev.filter((r) => r._id !== record._id));
+    } catch (err) {
+      alert("Failed to delete record. Please try again.");
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   if (isLoading) return <div className="loading-state">Loading records...</div>;
   if (error) return <div className="error-state">{error}</div>;
@@ -100,30 +133,71 @@ export default function RecordsList() {
                 <td colSpan="8" className="empty-state">No records found.</td>
               </tr>
             ) : (
-              filteredRecords.map((record) => (
-                <tr key={record._id} className="record-row">
-                  <td className="applicant-name">{record.applicant?.name || "-"}</td>
-                  <td className="applicant-country">{record.applicant?.country?.name || "-"}</td>
-                  <td className="record-type">{record.type}</td>
-                  <td className="record-progress">
-                    <span className={`status-badge ${record.progressStatus?.toLowerCase().replace(/\s+/g, '-') || ''}`}>
-                      {record.progressStatus || "-"}
-                    </span>
-                  </td>
-                  <td className="record-submitted">
-                    {record.submittedAt ? new Date(record.submittedAt).toLocaleDateString() : "-"}
-                  </td>
-                  <td className="record-physical">
-                    {record.physical ? new Date(record.physical).toLocaleDateString() : "-"}
-                  </td>
-                  <td className="record-appointment">
-                    {record.appointment ? new Date(record.appointment).toLocaleDateString() : "-"}
-                  </td>
-                  <td className="record-actions">
-                    <Link to={`/records/edit/${record._id}`} className="action-link edit-link">Edit</Link>
-                  </td>
-                </tr>
-              ))
+              filteredRecords.map((record) => {
+                const cannotDelete = !canDelete(record.progressStatus);
+                return (
+                  <tr key={record._id} className="record-row">
+                    <td className="applicant-name">{record.applicant?.name || "-"}</td>
+                    <td className="applicant-country">{record.applicant?.country?.name || "-"}</td>
+                    <td className="record-type">{record.type}</td>
+                    <td className="record-progress">
+                      <span className={`status-badge ${record.progressStatus?.toLowerCase().replace(/\s+/g, '-') || ''}`}>
+                        {record.progressStatus || "-"}
+                      </span>
+                    </td>
+                    <td className="record-submitted">
+                      {record.submittedAt ? new Date(record.submittedAt).toLocaleDateString() : "-"}
+                    </td>
+                    <td className="record-physical">
+                      {record.physical ? new Date(record.physical).toLocaleDateString() : "-"}
+                    </td>
+                    <td className="record-appointment">
+                      {record.appointment ? new Date(record.appointment).toLocaleDateString() : "-"}
+                    </td>
+                    <td className="record-actions">
+                      <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+                        <Link
+                          to={`/records/edit/${record._id}`}
+                          className="action-link edit-link"
+                          style={{
+                            color: "#1976d2",
+                            textDecoration: "underline",
+                            background: "none",
+                            border: "none",
+                            cursor: "pointer",
+                            padding: 0,
+                            font: "inherit"
+                          }}
+                        >
+                          Edit
+                        </Link>
+                        <span style={{ color: "#bbb" }}>|</span>
+                        <button
+                          className="action-link delete-link"
+                          onClick={() => handleDelete(record, cannotDelete)}
+                          disabled={deletingId === record._id}
+                          style={{
+                            color: cannotDelete ? "gray" : "red",
+                            background: "none",
+                            border: "none",
+                            cursor: cannotDelete
+                              ? "not-allowed"
+                              : deletingId === record._id
+                              ? "not-allowed"
+                              : "pointer",
+                            padding: 0,
+                            font: "inherit"
+                          }}
+                        >
+                          {deletingId === record._id
+                            ? "Deleting..."
+                            : "Delete"}
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })
             )}
           </tbody>
         </table>

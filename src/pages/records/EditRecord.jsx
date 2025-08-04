@@ -151,7 +151,7 @@ export default function EditRecord() {
               <option value="LABOR PERMIT PROCESSED">LABOR PERMIT PROCESSED</option>
               <option value="LABOR PERMIT DISPATCHED">LABOR PERMIT DISPATCHED</option>
               <option value="CANCELLED SELF">SELF CANCEL</option>
-              <option value="OFC CANCELLED">OFFICE CANCEL</option>
+              <option value="FLIGHT DONE">FLIGHT DONE</option>
             </select>
           </div>
 

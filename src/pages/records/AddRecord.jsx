@@ -133,7 +133,7 @@ export default function AddRecord() {
               <option value="LABOR PERMIT DISPATCHED">LABOR PERMIT DISPATCHED</option>
               <option value="FLIGHT DONE">FLIGHT DONE</option>
               <option value="CANCELLED SELF">SELF CANCEL</option>
-              <option value="OFC CANCELLED">OFFICE CANCEL</option>
+              
             </select>
           </div>
 
