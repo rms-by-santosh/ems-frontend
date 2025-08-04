@@ -1,0 +1,245 @@
+/* Main container styles */
+.pcc-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+/* Header styles */
+.pcc-header {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+/* Form styles */
+.pcc-form {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.form-control:focus {
+  border-color: #3498db;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.form-select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  background-color: white;
+  cursor: pointer;
+}
+
+.form-textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* Button styles */
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-primary {
+  background-color: #3498db;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #2980b9;
+}
+
+.btn-link {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background-color: #f8f9fa;
+  color: #3498db;
+  text-decoration: none;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  transition: all 0.3s;
+}
+
+.btn-link:hover {
+  background-color: #e9ecef;
+}
+
+/* Table styles */
+.pcc-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.pcc-table th,
+.pcc-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.pcc-table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.pcc-table tr:hover {
+  background-color: #f8f9fa;
+}
+
+/* Status indicators */
+.status-applied { color: #f39c12; }
+.status-approved { color: #2ecc71; }
+.status-rejected { color: #e74c3c; }
+.status-dispatched { color: #3498db; }
+.status-reapplied { color: #9b59b6; }
+
+/* Error message */
+.error-message {
+  color: #e74c3c;
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background-color: #fdecea;
+  border-radius: 4px;
+}
+
+/* Loading state */
+.loading-text {
+  color: #7f8c8d;
+  font-style: italic;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .pcc-container {
+    padding: 1rem;
+  }
+  
+  .pcc-table {
+    display: block;
+    overflow-x: auto;
+  }
+}
+/* Search styles */
+.search-container {
+  margin-bottom: 1.5rem;
+}
+
+.search-input {
+  width: 100%;
+  max-width: 300px;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: all 0.3s;
+}
+
+.search-input:focus {
+  border-color: #3498db;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+/* Table section styles */
+.table-section {
+  margin-bottom: 2.5rem;
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.section-title {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+/* Validity indicators */
+.validity-valid {
+  color: #2ecc71;
+  font-weight: 500;
+}
+
+.validity-reapply {
+  color: #f39c12;
+  font-weight: 500;
+}
+
+.validity-expired {
+  color: #e74c3c;
+  font-weight: 500;
+}
+
+/* Status indicators (add if not already present) */
+.status-applied { color: #f39c12; }
+.status-approved { color: #2ecc71; }
+.status-rejected { color: #e74c3c; }
+.status-dispatched { color: #3498db; }
+.status-reapplied { color: #9b59b6; }
+
+/* Action links */
+.action-link {
+  color: #3498db;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.action-link:hover {
+  color: #2980b9;
+  text-decoration: underline;
+}
+
+/* Responsive adjustments for tables */
+@media (max-width: 768px) {
+  .pcc-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  
+  .table-section {
+    padding: 1rem;
+  }
+}
