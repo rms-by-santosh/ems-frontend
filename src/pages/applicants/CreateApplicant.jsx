@@ -46,10 +46,29 @@ export default function CreateApplicant() {
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
   };
 
+  // -------- Only this function changed! --------
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     try {
+      // Get all applicants with the same name
+      const checkRes = await axios.get(
+        `${import.meta.env.VITE_API_URL}/applicants?name=${encodeURIComponent(form.name.trim())}`
+      );
+      // Only block if applicant with *exact* same name exists (case-insensitive, trimmed)
+      const inputName = form.name.trim().toLowerCase();
+      const exactMatch = Array.isArray(checkRes.data)
+        ? checkRes.data.find(
+            (app) =>
+              (app.name || "").trim().toLowerCase() === inputName
+          )
+        : null;
+
+      if (exactMatch) {
+        setError("Name already exists");
+        return;
+      }
+
       await axios.post(`${import.meta.env.VITE_API_URL}/applicants`, form);
       setSuccess(true);
       setTimeout(() => navigate("/applicants"), 1500);
