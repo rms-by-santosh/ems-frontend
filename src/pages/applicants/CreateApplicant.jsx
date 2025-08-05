@@ -1,20 +1,29 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import DatePicker from "react-datepicker";
+import { format, parse } from "date-fns";
+import "react-datepicker/dist/react-datepicker.css";
 import { useNavigate } from "react-router-dom";
 import "./Applicant.css";
+
+// Helper to safely format as DD/MM/YYYY
+function formatForDisplay(dateObj) {
+  if (!dateObj) return "";
+  return format(dateObj, "dd/MM/yyyy");
+}
 
 export default function CreateApplicant() {
   const [form, setForm] = useState({
     name: "",
     passport: "",
-    dob: "",
+    dob: null,
     phone: "",
     email: "",
     country: "",
     agent: "",
     remarks: "",
     maritalstatus: "",
-    dExp: ""
+    dExp: null
   });
   const [countries, setCountries] = useState([]);
   const [agents, setAgents] = useState([]);
@@ -46,16 +55,18 @@ export default function CreateApplicant() {
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
   };
 
-  // -------- Only this function changed! --------
+  const handleDateChange = (name, date) => {
+    setForm((f) => ({ ...f, [name]: date }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     try {
-      // Get all applicants with the same name
+      // Check for exact duplicate name (case-insensitive, trimmed)
       const checkRes = await axios.get(
         `${import.meta.env.VITE_API_URL}/applicants?name=${encodeURIComponent(form.name.trim())}`
       );
-      // Only block if applicant with *exact* same name exists (case-insensitive, trimmed)
       const inputName = form.name.trim().toLowerCase();
       const exactMatch = Array.isArray(checkRes.data)
         ? checkRes.data.find(
@@ -63,13 +74,26 @@ export default function CreateApplicant() {
               (app.name || "").trim().toLowerCase() === inputName
           )
         : null;
-
       if (exactMatch) {
         setError("Name already exists");
         return;
       }
 
-      await axios.post(`${import.meta.env.VITE_API_URL}/applicants`, form);
+      // Format dates as YYYY-MM-DD before saving
+      const dobIso =
+        form.dob instanceof Date
+          ? format(form.dob, "yyyy-MM-dd")
+          : "";
+      const dExpIso =
+        form.dExp instanceof Date
+          ? format(form.dExp, "yyyy-MM-dd")
+          : "";
+
+      await axios.post(`${import.meta.env.VITE_API_URL}/applicants`, {
+        ...form,
+        dob: dobIso,
+        dExp: dExpIso
+      });
       setSuccess(true);
       setTimeout(() => navigate("/applicants"), 1500);
     } catch (err) {
@@ -120,14 +144,25 @@ export default function CreateApplicant() {
           <div className="form-row">
             <div className="form-group">
               <label className="form-label">Date of Birth*</label>
-              <input
-                type="date"
-                name="dob"
-                value={form.dob}
-                onChange={handleChange}
-                required
+              <DatePicker
+                selected={form.dob}
+                onChange={(date) => handleDateChange("dob", date)}
+                dateFormat="dd/MM/yyyy"
+                placeholderText="DD/MM/YYYY"
                 className="form-input"
+                required
+                showMonthDropdown
+                showYearDropdown
+                dropdownMode="select"
+                maxDate={new Date()}
+                autoComplete="off"
+                name="dob"
               />
+              {form.dob && (
+                <div style={{ color: "#2c3e50", fontSize: "0.98em", marginTop: 2 }}>
+                  Selected: <b>{formatForDisplay(form.dob)}</b>
+                </div>
+              )}
             </div>
             
             <div className="form-group">
@@ -177,14 +212,24 @@ export default function CreateApplicant() {
           <div className="form-row">
             <div className="form-group">
               <label className="form-label">Passport Expiry*</label>
-              <input
-                type="date"
-                name="dExp"
-                value={form.dExp}
-                onChange={handleChange}
-                required
+              <DatePicker
+                selected={form.dExp}
+                onChange={(date) => handleDateChange("dExp", date)}
+                dateFormat="dd/MM/yyyy"
+                placeholderText="DD/MM/YYYY"
                 className="form-input"
+                required
+                showMonthDropdown
+                showYearDropdown
+                dropdownMode="select"
+                autoComplete="off"
+                name="dExp"
               />
+              {form.dExp && (
+                <div style={{ color: "#2c3e50", fontSize: "0.98em", marginTop: 2 }}>
+                  Selected: <b>{formatForDisplay(form.dExp)}</b>
+                </div>
+              )}
             </div>
             
             <div className="form-group">
