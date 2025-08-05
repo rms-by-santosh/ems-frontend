@@ -1,20 +1,26 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import DatePicker from "react-datepicker";
+import { format } from "date-fns";
+import "react-datepicker/dist/react-datepicker.css";
 import { useNavigate } from "react-router-dom";
 import "./Records.css";
+
+function formatForDisplay(dateObj) {
+  if (!dateObj) return "";
+  return format(dateObj, "dd/MM/yyyy");
+}
 
 export default function AddRecord() {
   const [form, setForm] = useState({
     applicant: "",
     type: "",
     status: "pending",
-    issuedAt: "",
-    expiresAt: "",
     notes: "",
     progressStatus: "",
-    submittedAt: "",
-    physical: "",
-    appointment: "",
+    submittedAt: null,
+    physical: null,
+    appointment: null,
   });
   const [applicants, setApplicants] = useState([]);
   const [existingApplicantIds, setExistingApplicantIds] = useState([]);
@@ -33,7 +39,6 @@ export default function AddRecord() {
             headers: { Authorization: `Bearer ${token}` }
           })
         ]);
-
         setApplicants(applicantsData.data);
         const applicantIds = recordsData.data.map((record) =>
           typeof record.applicant === "object" && record.applicant !== null
@@ -52,12 +57,23 @@ export default function AddRecord() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const handleDateChange = (name, date) => {
+    setForm((f) => ({ ...f, [name]: date }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     try {
       const token = localStorage.getItem("token");
-      await axios.post(`${import.meta.env.VITE_API_URL}/records`, form, {
+      // Only include the dates that exist in your form!
+      const formattedForm = {
+        ...form,
+        submittedAt: form.submittedAt ? format(form.submittedAt, "yyyy-MM-dd") : "",
+        physical: form.physical ? format(form.physical, "yyyy-MM-dd") : "",
+        appointment: form.appointment ? format(form.appointment, "yyyy-MM-dd") : "",
+      };
+      await axios.post(`${import.meta.env.VITE_API_URL}/records`, formattedForm, {
         headers: { Authorization: `Bearer ${token}` }
       });
       navigate("/records");
@@ -133,41 +149,61 @@ export default function AddRecord() {
               <option value="LABOR PERMIT DISPATCHED">LABOR PERMIT DISPATCHED</option>
               <option value="FLIGHT DONE">FLIGHT DONE</option>
               <option value="CANCELLED SELF">SELF CANCEL</option>
-              
             </select>
           </div>
 
           <div className="form-group">
             <label className="form-label">Submitted At:</label>
-            <input
-              type="date"
+            <DatePicker
+              selected={form.submittedAt}
+              onChange={(date) => handleDateChange("submittedAt", date)}
+              dateFormat="dd/MM/yyyy"
+              placeholderText="DD/MM/YYYY"
               className="form-input"
+              autoComplete="off"
               name="submittedAt"
-              value={form.submittedAt}
-              onChange={handleChange}
             />
+            {form.submittedAt && (
+              <div style={{ color: "#2c3e50", fontSize: "0.98em", marginTop: 2 }}>
+                Selected: <b>{formatForDisplay(form.submittedAt)}</b>
+              </div>
+            )}
           </div>
 
           <div className="form-group">
             <label className="form-label">Physical Date:</label>
-            <input
-              type="date"
+            <DatePicker
+              selected={form.physical}
+              onChange={(date) => handleDateChange("physical", date)}
+              dateFormat="dd/MM/yyyy"
+              placeholderText="DD/MM/YYYY"
               className="form-input"
+              autoComplete="off"
               name="physical"
-              value={form.physical}
-              onChange={handleChange}
             />
+            {form.physical && (
+              <div style={{ color: "#2c3e50", fontSize: "0.98em", marginTop: 2 }}>
+                Selected: <b>{formatForDisplay(form.physical)}</b>
+              </div>
+            )}
           </div>
 
           <div className="form-group">
             <label className="form-label">Appointment:</label>
-            <input
-              type="date"
+            <DatePicker
+              selected={form.appointment}
+              onChange={(date) => handleDateChange("appointment", date)}
+              dateFormat="dd/MM/yyyy"
+              placeholderText="DD/MM/YYYY"
               className="form-input"
+              autoComplete="off"
               name="appointment"
-              value={form.appointment}
-              onChange={handleChange}
             />
+            {form.appointment && (
+              <div style={{ color: "#2c3e50", fontSize: "0.98em", marginTop: 2 }}>
+                Selected: <b>{formatForDisplay(form.appointment)}</b>
+              </div>
+            )}
           </div>
 
           <div className="form-group full-width">
