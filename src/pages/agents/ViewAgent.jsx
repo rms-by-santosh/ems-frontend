@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { useParams, Link } from "react-router-dom";
 import "./Agent.css";
@@ -12,17 +12,51 @@ export default function ViewAgent() {
   const [errorAgent, setErrorAgent] = useState("");
   const [errorApplicants, setErrorApplicants] = useState("");
 
+  // Ref for print section
+  const printRef = useRef();
+
+  // Print only the table section
+  const handlePrintTable = () => {
+    const printContent = printRef.current.innerHTML;
+    const win = window.open("", "PrintTableWindow", "height=700,width=900");
+    win.document.write(`
+      <html>
+        <head>
+          <title>Applicants Table</title>
+          <style>
+            @media print {
+              body { background: #fff !important; color: #000 !important; }
+              table { width: 100%; border-collapse: collapse; font-size: 16px; }
+              th, td { border: 1px solid #333; padding: 8px; text-align: left; }
+              th { background: #e3e3e3; }
+            }
+            table { width: 100%; border-collapse: collapse; font-size: 16px; }
+            th, td { border: 1px solid #333; padding: 8px; text-align: left; }
+            th { background: #e3e3e3; }
+          </style>
+        </head>
+        <body>${printContent}</body>
+      </html>
+    `);
+    win.document.close();
+    win.focus();
+    setTimeout(() => {
+      win.print();
+      win.close();
+    }, 300);
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoadingAgent(true);
         setLoadingApplicants(true);
-        
+
         const [agentRes, applicantsRes] = await Promise.all([
           axios.get(`${import.meta.env.VITE_API_URL}/agents/${id}`),
           axios.get(`${import.meta.env.VITE_API_URL}/applicants?agent=${id}`)
         ]);
-        
+
         setAgent(agentRes.data);
         setApplicants(applicantsRes.data);
       } catch (err) {
@@ -72,6 +106,24 @@ export default function ViewAgent() {
           <span className="badge">{applicants.length}</span>
         </div>
 
+        {/* Print Table Button */}
+        <button
+          onClick={handlePrintTable}
+          className="print-btn"
+          style={{
+            margin: "10px 0 20px 0",
+            padding: "6px 18px",
+            fontSize: "1rem",
+            background: "#417af4",
+            color: "#fff",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer"
+          }}
+        >
+          🖨️ Print Applicants
+        </button>
+
         {loadingApplicants ? (
           <div className="loading-spinner small"></div>
         ) : errorApplicants ? (
@@ -84,14 +136,14 @@ export default function ViewAgent() {
             </Link>
           </div>
         ) : (
-          <div className="table-container">
+          // Only this section is printed!
+          <div className="table-container" id="print-table-section" ref={printRef}>
             <table className="applicants-table">
               <thead>
                 <tr>
                   <th>Name</th>
                   <th>Email</th>
                   <th>Phone</th>
-                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -100,20 +152,6 @@ export default function ViewAgent() {
                     <td>{name}</td>
                     <td>{email || "-"}</td>
                     <td>{phone || "-"}</td>
-                    <td className="actions-cell">
-                      <Link 
-                        to={`/applicants/view/${_id}`} 
-                        className="action-link view"
-                      >
-                        View
-                      </Link>
-                      <Link 
-                        to={`/applicants/edit/${_id}`} 
-                        className="action-link edit"
-                      >
-                        Edit
-                      </Link>
-                    </td>
                   </tr>
                 ))}
               </tbody>
