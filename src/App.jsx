@@ -39,7 +39,7 @@ import EditRecord from "./pages/records/EditRecord";
 import PCCRecords from "./pages/pcc/PCCRecords";
 import AddPCCRecord from "./pages/pcc/AddPCCRecord";
 import EditPCCRecord from "./pages/pcc/EditPCCRecord";
-
+import PassportValidityCheck from "./pages/records/PassportValidityCheck";
 // Admin Tools
 import AdminTools from "./pages/admin/AdminTools";
 import PaymentManagement from "./pages/admin/PaymentManagement";
@@ -81,7 +81,7 @@ function AppRoutes() {
       <Route path="/pcc" element={<ProtectedRoute><PCCRecords /></ProtectedRoute>} />
       <Route path="/pcc/add" element={<ProtectedRoute><AddPCCRecord /></ProtectedRoute>} />
       <Route path="/pcc/edit/:id" element={<ProtectedRoute><EditPCCRecord /></ProtectedRoute>} />
-
+<Route path="/passport" element={<ProtectedRoute><PassportValidityCheck /></ProtectedRoute>} />
       {/* Admin Tools */}
        <Route path="/admin" element={<ProtectedRoute roles={['admin']}><AdminTools /></ProtectedRoute>} />
       <Route path="/admin/payments" element={<ProtectedRoute roles={['admin']}><PaymentManagement /></ProtectedRoute>} />
