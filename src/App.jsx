@@ -45,6 +45,7 @@ import AdminTools from "./pages/admin/AdminTools";
 import PaymentManagement from "./pages/admin/PaymentManagement";
 import UserManagement from "./pages/admin/UserManagement";
 
+import Status from "./pages/records/Status";
 function AppRoutes() {
   const { user } = useAuth();
 
@@ -82,6 +83,7 @@ function AppRoutes() {
       <Route path="/pcc/add" element={<ProtectedRoute><AddPCCRecord /></ProtectedRoute>} />
       <Route path="/pcc/edit/:id" element={<ProtectedRoute><EditPCCRecord /></ProtectedRoute>} />
 <Route path="/passport" element={<ProtectedRoute><PassportValidityCheck /></ProtectedRoute>} />
+<Route path="/statussearch" element={<ProtectedRoute><Status /></ProtectedRoute>} />
       {/* Admin Tools */}
        <Route path="/admin" element={<ProtectedRoute roles={['admin']}><AdminTools /></ProtectedRoute>} />
       <Route path="/admin/payments" element={<ProtectedRoute roles={['admin']}><PaymentManagement /></ProtectedRoute>} />

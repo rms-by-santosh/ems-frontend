@@ -100,6 +100,11 @@ export default function RecordsList() {
             Passport Validity Check
           </button>
         </Link>
+        <Link to="/statussearch" className="pcc-records-btn">
+          <button type="button" style={{ padding: "8px 18px", borderRadius: "5px", background: "#2979ff", color: "#fff", border: "none", cursor: "pointer" }}>
+            Search By Status
+          </button>
+        </Link>
       </div>
 
       <div className="records-header">
