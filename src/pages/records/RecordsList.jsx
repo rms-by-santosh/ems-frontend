@@ -10,6 +10,7 @@ export default function RecordsList() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [deletingId, setDeletingId] = useState(null);
+  const [showAll, setShowAll] = useState(false); // <-- NEW
 
   const fetchRecords = async () => {
     try {
@@ -86,10 +87,16 @@ export default function RecordsList() {
   if (isLoading) return <div className="loading-state">Loading records...</div>;
   if (error) return <div className="error-state">{error}</div>;
 
+  // PAGINATION LOGIC
+  const recordsToShow =
+    showAll || filteredRecords.length <= 10
+      ? filteredRecords
+      : filteredRecords.slice(0, 10);
+
   return (
     <div className="records-container">
       {/* PCC Records Button at Top */}
-      <div style={{ marginBottom: "1rem",gap:"1rem", display: "flex", justifyContent: "flex-end" }}>
+      <div style={{ marginBottom: "1rem", gap: "1rem", display: "flex", justifyContent: "flex-end" }}>
         <Link to="/pcc" className="pcc-records-btn">
           <button type="button" style={{ padding: "8px 18px", borderRadius: "5px", background: "#2979ff", color: "#fff", border: "none", cursor: "pointer" }}>
             Go to PCC Records
@@ -127,6 +134,7 @@ export default function RecordsList() {
         <table className="records-table">
           <thead className="table-header">
             <tr>
+              <th>SN</th>
               <th className="col-applicant">Applicant</th>
               <th className="col-country">Country</th>
               <th className="col-type">Type</th>
@@ -138,15 +146,16 @@ export default function RecordsList() {
             </tr>
           </thead>
           <tbody className="table-body">
-            {filteredRecords.length === 0 ? (
+            {recordsToShow.length === 0 ? (
               <tr className="empty-row">
-                <td colSpan="8" className="empty-state">No records found.</td>
+                <td colSpan="9" className="empty-state">No records found.</td>
               </tr>
             ) : (
-              filteredRecords.map((record) => {
+              recordsToShow.map((record, idx) => {
                 const cannotDelete = !canDelete(record.progressStatus);
                 return (
                   <tr key={record._id} className="record-row">
+                    <td>{idx + 1}</td>
                     <td className="applicant-name">{record.applicant?.name || "-"}</td>
                     <td className="applicant-country">{record.applicant?.country?.name || "-"}</td>
                     <td className="record-type">{record.type}</td>
@@ -211,6 +220,27 @@ export default function RecordsList() {
             )}
           </tbody>
         </table>
+        {/* --- Show All Button --- */}
+        {filteredRecords.length > 10 && !showAll && (
+          <div style={{ textAlign: "center", marginTop: "10px" }}>
+            <button
+              className="show-all-btn"
+              onClick={() => setShowAll(true)}
+              style={{
+                padding: "6px 18px",
+                borderRadius: "6px",
+                background: "#1677ff",
+                color: "#fff",
+                border: "none",
+                cursor: "pointer",
+                fontWeight: "bold",
+                fontSize: "15px",
+              }}
+            >
+              Show All
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

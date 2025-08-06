@@ -11,6 +11,7 @@ export default function ViewAgent() {
   const [loadingApplicants, setLoadingApplicants] = useState(true);
   const [errorAgent, setErrorAgent] = useState("");
   const [errorApplicants, setErrorApplicants] = useState("");
+  const [showAll, setShowAll] = useState(false); // --- new
 
   // Ref for print section
   const printRef = useRef();
@@ -73,6 +74,12 @@ export default function ViewAgent() {
 
   if (loadingAgent) return <div className="loading-spinner"></div>;
   if (errorAgent) return <div className="error-message">{errorAgent}</div>;
+
+  // Show only 10 applicants by default
+  const applicantsToShow =
+    showAll || applicants.length <= 10
+      ? applicants
+      : applicants.slice(0, 10);
 
   return (
     <div className="agent-container">
@@ -141,14 +148,16 @@ export default function ViewAgent() {
             <table className="applicants-table">
               <thead>
                 <tr>
+                  <th>SN</th>
                   <th>Name</th>
                   <th>Email</th>
                   <th>Phone</th>
                 </tr>
               </thead>
               <tbody>
-                {applicants.map(({ _id, name, email, phone }) => (
+                {applicantsToShow.map(({ _id, name, email, phone }, idx) => (
                   <tr key={_id}>
+                    <td>{idx + 1}</td>
                     <td>{name}</td>
                     <td>{email || "-"}</td>
                     <td>{phone || "-"}</td>
@@ -156,6 +165,27 @@ export default function ViewAgent() {
                 ))}
               </tbody>
             </table>
+            {/* Show All Button */}
+            {applicants.length > 10 && !showAll && (
+              <div style={{ textAlign: "center", marginTop: "10px" }}>
+                <button
+                  className="show-all-btn"
+                  onClick={() => setShowAll(true)}
+                  style={{
+                    padding: "6px 18px",
+                    borderRadius: "6px",
+                    background: "#1677ff",
+                    color: "#fff",
+                    border: "none",
+                    cursor: "pointer",
+                    fontWeight: "bold",
+                    fontSize: "15px",
+                  }}
+                >
+                  Show All
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>

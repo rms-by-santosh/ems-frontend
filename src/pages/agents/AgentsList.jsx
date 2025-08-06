@@ -10,6 +10,7 @@ export default function AgentsList() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [deletingId, setDeletingId] = useState(null);
+  const [showAll, setShowAll] = useState(false); // <---- NEW
 
   const fetchAgents = async () => {
     try {
@@ -91,6 +92,12 @@ export default function AgentsList() {
   if (isLoading) return <div className="loading-spinner">Loading agents...</div>;
   if (error) return <div className="error-message">{error}</div>;
 
+  // --- PAGINATION LOGIC (SHOW ONLY 10 BY DEFAULT) ---
+  const agentsToShow =
+    showAll || filteredAgents.length <= 10
+      ? filteredAgents
+      : filteredAgents.slice(0, 10);
+
   return (
     <div className="agents-container">
       <div className="agents-header">
@@ -120,12 +127,12 @@ export default function AgentsList() {
             </tr>
           </thead>
           <tbody className="table-body">
-            {filteredAgents.length === 0 ? (
+            {agentsToShow.length === 0 ? (
               <tr className="empty-row">
                 <td colSpan="4" className="empty-state">No agents found.</td>
               </tr>
             ) : (
-              filteredAgents.map((agent) => (
+              agentsToShow.map((agent) => (
                 <tr key={agent._id} className="agent-row">
                   <td className="agent-name">{agent.name || '-'}</td>
                   <td className="agent-email">{agent.email || '-'}</td>
@@ -160,6 +167,27 @@ export default function AgentsList() {
             )}
           </tbody>
         </table>
+        {/* ---- SHOW "All" BUTTON IF NEEDED ---- */}
+        {filteredAgents.length > 10 && !showAll && (
+          <div style={{ textAlign: "center", marginTop: "10px" }}>
+            <button
+              className="show-all-btn"
+              onClick={() => setShowAll(true)}
+              style={{
+                padding: "6px 18px",
+                borderRadius: "6px",
+                background: "#1677ff",
+                color: "#fff",
+                border: "none",
+                cursor: "pointer",
+                fontWeight: "bold",
+                fontSize: "15px",
+              }}
+            >
+              Show All
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

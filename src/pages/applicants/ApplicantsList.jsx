@@ -12,6 +12,7 @@ export default function ApplicantsList() {
   const [error, setError] = useState("");
   const [deletingId, setDeletingId] = useState(null);
   const [recordApplicantIds, setRecordApplicantIds] = useState([]);
+  const [showAll, setShowAll] = useState(false);
 
   // Fetch all applicants
   const fetchApplicants = async () => {
@@ -46,13 +47,12 @@ export default function ApplicantsList() {
           },
         }
       );
-      // Extract applicant IDs (handle if applicant is either id or object)
       const ids = data
         .map((rec) => (typeof rec.applicant === "string" ? rec.applicant : rec.applicant?._id))
         .filter(Boolean);
       setRecordApplicantIds(ids);
     } catch (err) {
-      // Just ignore records error, applicants list still loads
+      // ignore
     }
   };
 
@@ -72,10 +72,8 @@ export default function ApplicantsList() {
     }
   }, [searchTerm, applicants]);
 
-  // Check if applicant is in records
   const isInRecords = (applicantId) => recordApplicantIds.includes(applicantId);
 
-  // Handle Delete
   const handleDelete = async (id, cannotDelete) => {
     if (cannotDelete) {
       alert("Cannot delete: Applicant has a record.");
@@ -105,6 +103,11 @@ export default function ApplicantsList() {
   if (isLoading) return <div className="loading-state">Loading applicants...</div>;
   if (error) return <div className="error-state">{error}</div>;
 
+  const applicantsToShow =
+    showAll || filteredApplicants.length <= 15
+      ? filteredApplicants
+      : filteredApplicants.slice(0, 15);
+
   return (
     <div className="applicants-container">
       <div className="applicants-header">
@@ -127,6 +130,7 @@ export default function ApplicantsList() {
         <table className="applicants-table">
           <thead>
             <tr>
+              <th>SN</th>
               <th>Name</th>
               <th>Passport</th>
               <th>Country</th>
@@ -137,15 +141,16 @@ export default function ApplicantsList() {
             </tr>
           </thead>
           <tbody>
-            {filteredApplicants.length === 0 ? (
+            {applicantsToShow.length === 0 ? (
               <tr>
-                <td colSpan="7" className="empty-state">No applicants found.</td>
+                <td colSpan="8" className="empty-state">No applicants found.</td>
               </tr>
             ) : (
-              filteredApplicants.map(({ _id, name, passport, country, agent, pstatus, phone }) => {
+              applicantsToShow.map(({ _id, name, passport, country, agent, pstatus, phone }, idx) => {
                 const cannotDelete = isInRecords(_id);
                 return (
                   <tr key={_id} className="applicant-row">
+                    <td>{idx + 1}</td>
                     <td>{name || '-'}</td>
                     <td>{passport || '-'}</td>
                     <td>{country?.name || '-'}</td>
@@ -185,6 +190,27 @@ export default function ApplicantsList() {
             )}
           </tbody>
         </table>
+        {/* ---- SHOW "All" BUTTON IF NEEDED ---- */}
+        {filteredApplicants.length > 15 && !showAll && (
+          <div style={{ textAlign: "center", marginTop: "10px" }}>
+            <button
+              className="show-all-btn"
+              onClick={() => setShowAll(true)}
+              style={{
+                padding: "6px 18px",
+                borderRadius: "6px",
+                background: "#1677ff",
+                color: "#fff",
+                border: "none",
+                cursor: "pointer",
+                fontWeight: "bold",
+                fontSize: "15px",
+              }}
+            >
+              Show All
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

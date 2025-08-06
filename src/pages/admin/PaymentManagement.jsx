@@ -13,6 +13,7 @@ export default function PaymentManagement() {
   const [addForm, setAddForm] = useState({ date: "", reference: "", amount: "", method: "" });
   const [editId, setEditId] = useState(null);
   const [editForm, setEditForm] = useState({ reference: "", amount: "", method: "" });
+  const [showAll, setShowAll] = useState(false); // --- NEW
 
   const printRef = useRef(null);
   const token = localStorage.getItem("token");
@@ -57,6 +58,12 @@ export default function PaymentManagement() {
       ? app.country.name?.toLowerCase().includes(search.toLowerCase())
       : (app.country || "").toLowerCase().includes(search.toLowerCase()))
   );
+
+  // --- PAGINATION LOGIC: Only 10 applicants by default ---
+  const applicantsToShow =
+    showAll || filteredApplicants.length <= 10
+      ? filteredApplicants
+      : filteredApplicants.slice(0, 10);
 
   // 2. Fetch payments for applicant
   const fetchPayments = async (applicantId) => {
@@ -213,10 +220,10 @@ export default function PaymentManagement() {
             </tr>
           </thead>
           <tbody>
-            {filteredApplicants.length === 0 ? (
+            {applicantsToShow.length === 0 ? (
               <tr><td colSpan="6" className="no-data">No applicants found.</td></tr>
             ) : (
-              filteredApplicants.map((app, idx) => (
+              applicantsToShow.map((app, idx) => (
                 <tr key={app._id || idx}>
                   <td>{idx + 1}</td>
                   <td>{app.name}</td>
@@ -232,7 +239,30 @@ export default function PaymentManagement() {
             )}
           </tbody>
         </table>
+        {/* --- Show All Button --- */}
+        {filteredApplicants.length > 10 && !showAll && (
+          <div style={{ textAlign: "center", marginTop: "10px" }}>
+            <button
+              className="show-all-btn"
+              onClick={() => setShowAll(true)}
+              style={{
+                padding: "6px 18px",
+                borderRadius: "6px",
+                background: "#1677ff",
+                color: "#fff",
+                border: "none",
+                cursor: "pointer",
+                fontWeight: "bold",
+                fontSize: "15px",
+              }}
+            >
+              Show All
+            </button>
+          </div>
+        )}
       </div>
+
+      {/* --- rest of your code stays same --- */}
 
       {selectedApplicant && !showAdd && (
         <div ref={printRef} className="payment-card">

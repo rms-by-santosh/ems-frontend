@@ -26,7 +26,23 @@ function getValidityClass(validity) {
 }
 
 // Table component
-function PCCRecordsTable({ title, records, search, setSearch, onDelete, deletingId }) {
+function PCCRecordsTable({
+  title,
+  records,
+  search,
+  setSearch,
+  onDelete,
+  deletingId,
+  showSN = false,
+  paginated = false,
+}) {
+  const [showAll, setShowAll] = useState(false);
+
+  let recordsToShow = records;
+  if (paginated && !showAll && records.length > 10) {
+    recordsToShow = records.slice(0, 10);
+  }
+
   return (
     <div className="table-section">
       <h3 className="section-title">{title}</h3>
@@ -42,6 +58,7 @@ function PCCRecordsTable({ title, records, search, setSearch, onDelete, deleting
       <table className="pcc-table">
         <thead>
           <tr>
+            {showSN && <th>SN</th>}
             <th>Applicant</th>
             <th>Status</th>
             <th>Issued At</th>
@@ -51,15 +68,16 @@ function PCCRecordsTable({ title, records, search, setSearch, onDelete, deleting
           </tr>
         </thead>
         <tbody>
-          {records.length === 0 ? (
+          {recordsToShow.length === 0 ? (
             <tr>
-              <td colSpan="6">No PCC records found.</td>
+              <td colSpan={showSN ? 7 : 6}>No PCC records found.</td>
             </tr>
           ) : (
-            records.map(({ _id, applicant, process, issuedAt, registeredemail }) => {
+            recordsToShow.map(({ _id, applicant, process, issuedAt, registeredemail }, idx) => {
               const validity = getValidity(issuedAt);
               return (
                 <tr key={_id}>
+                  {showSN && <td>{idx + 1}</td>}
                   <td>{applicant?.name || "-"}</td>
                   <td className={`status-${process}`}>{process || "-"}</td>
                   <td>{issuedAt ? new Date(issuedAt).toLocaleDateString() : "-"}</td>
@@ -93,6 +111,27 @@ function PCCRecordsTable({ title, records, search, setSearch, onDelete, deleting
           )}
         </tbody>
       </table>
+      {/* Show All button only for paginated table */}
+      {paginated && records.length > 10 && !showAll && (
+        <div style={{ textAlign: "center", marginTop: "10px" }}>
+          <button
+            className="show-all-btn"
+            onClick={() => setShowAll(true)}
+            style={{
+              padding: "6px 18px",
+              borderRadius: "6px",
+              background: "#1677ff",
+              color: "#fff",
+              border: "none",
+              cursor: "pointer",
+              fontWeight: "bold",
+              fontSize: "15px",
+            }}
+          >
+            Show All
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -153,7 +192,17 @@ export default function PCCRecords() {
   if (error) return <p className="error-message">{error}</p>;
 
   // Filter records
-  const allRecords = pccRecords;
+  // For "All Records": move all "Valid" records to bottom
+  let allRecords = pccRecords;
+  const validRecords = allRecords.filter(
+    rec => getValidity(rec.issuedAt) === "Valid"
+  );
+  const notValidRecords = allRecords.filter(
+    rec => getValidity(rec.issuedAt) !== "Valid"
+  );
+  // Place not-valid on top, valid at bottom
+  allRecords = [...notValidRecords, ...validRecords];
+
   const expiredRecords = pccRecords.filter(
     rec => getValidity(rec.issuedAt) === "Expired"
   );
@@ -185,7 +234,7 @@ export default function PCCRecords() {
         </Link>
       </div>
 
-      {/* All Records Table */}
+      {/* All Records Table - paginated, SN, valid at bottom */}
       <PCCRecordsTable
         title="All Records"
         records={filterBySearch(allRecords, searchAll)}
@@ -193,6 +242,8 @@ export default function PCCRecords() {
         setSearch={setSearchAll}
         onDelete={handleDelete}
         deletingId={deletingId}
+        showSN={true}
+        paginated={true}
       />
 
       {/* Expired List Table */}
@@ -203,6 +254,8 @@ export default function PCCRecords() {
         setSearch={setSearchExpired}
         onDelete={handleDelete}
         deletingId={deletingId}
+        showSN={false}
+        paginated={false}
       />
 
       {/* Reapply List Table */}
@@ -213,6 +266,8 @@ export default function PCCRecords() {
         setSearch={setSearchReapply}
         onDelete={handleDelete}
         deletingId={deletingId}
+        showSN={false}
+        paginated={false}
       />
     </div>
   );
