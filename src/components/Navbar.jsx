@@ -27,6 +27,15 @@ export default function Navbar() {
       <NavLink to="/records" className="navbar__link">
         Records
       </NavLink>
+      <NavLink to="/pcc" className="navbar__link">
+        PCC
+      </NavLink>
+        <NavLink to="/passport" className="navbar__link">
+        PP Validity
+      </NavLink>
+        <NavLink to="/appointments" className="navbar__link">
+        Appointments
+      </NavLink>
       
       {/* <NavLink to="/pcc" className="navbar__link">
         PCC Records
@@ -36,6 +45,9 @@ export default function Navbar() {
         <>
           <NavLink to="/admin" className="navbar__link navbar__link--admin">
             Admin Tools
+          </NavLink>
+          <NavLink to="/admin/payments-view" className="navbar__link navbar__link--admin">
+           Accounting
           </NavLink>
           {/* <NavLink to="/admin/payments" className="navbar__link navbar__link--admin">
             Payments

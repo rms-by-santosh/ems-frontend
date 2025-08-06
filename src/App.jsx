@@ -44,8 +44,12 @@ import PassportValidityCheck from "./pages/records/PassportValidityCheck";
 import AdminTools from "./pages/admin/AdminTools";
 import PaymentManagement from "./pages/admin/PaymentManagement";
 import UserManagement from "./pages/admin/UserManagement";
-
+import Payment from "./pages/admin/Payment";
 import Status from "./pages/records/Status";
+
+//appointments
+import Appointments from "./pages/records/Appointments";
+
 function AppRoutes() {
   const { user } = useAuth();
 
@@ -77,6 +81,7 @@ function AppRoutes() {
       <Route path="/records" element={<ProtectedRoute><RecordsList /></ProtectedRoute>} />
       <Route path="/records/add" element={<ProtectedRoute><AddRecord /></ProtectedRoute>} />
       <Route path="/records/edit/:id" element={<ProtectedRoute><EditRecord /></ProtectedRoute>} />
+      <Route path="/appointments" element={<ProtectedRoute><Appointments /></ProtectedRoute>} />
 
       {/* PCC Records */}
       <Route path="/pcc" element={<ProtectedRoute><PCCRecords /></ProtectedRoute>} />
@@ -88,6 +93,7 @@ function AppRoutes() {
        <Route path="/admin" element={<ProtectedRoute roles={['admin']}><AdminTools /></ProtectedRoute>} />
       <Route path="/admin/payments" element={<ProtectedRoute roles={['admin']}><PaymentManagement /></ProtectedRoute>} />
       <Route path="/admin/users" element={<ProtectedRoute roles={['admin']}><UserManagement /></ProtectedRoute>} />
+      <Route path="/admin/payments-view" element={<ProtectedRoute roles={['admin']}><Payment /></ProtectedRoute>} />
 
       {/* Catch-all */}
       <Route path="*" element={<NotFound />} />
