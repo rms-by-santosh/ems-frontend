@@ -109,6 +109,11 @@ export default function RecordsList() {
            View Applicants To Process
           </button>
         </Link>
+        <Link to="/printanalysis" className="pcc-records-btn">
+          <button type="button" style={{ padding: "8px 18px", borderRadius: "5px", background: "#2979ff", color: "#fff", border: "none", cursor: "pointer" }}>
+           Extra Toolkit
+          </button>
+        </Link>
       </div>
 
       <div className="records-header">

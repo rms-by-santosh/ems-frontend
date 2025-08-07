@@ -1,6 +1,11 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import './theme.css';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import "./theme.css";
 
 import Header from "./components/Header";
 import Navbar from "./components/Navbar";
@@ -46,7 +51,7 @@ import PaymentManagement from "./pages/admin/PaymentManagement";
 import UserManagement from "./pages/admin/UserManagement";
 import Payment from "./pages/admin/Payment";
 import Status from "./pages/records/Status";
-
+import Depth from "./pages/records/Depth";
 //appointments
 import Appointments from "./pages/records/Appointments";
 
@@ -57,47 +62,239 @@ function AppRoutes() {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
-      <Route path="/register" element={!user ? <Register /> : <Navigate to="/" />} />
+      <Route
+        path="/register"
+        element={!user ? <Register /> : <Navigate to="/" />}
+      />
 
       {/* Countries */}
-      <Route path="/countries" element={<ProtectedRoute><CountriesList /></ProtectedRoute>} />
-      <Route path="/countries/add" element={<ProtectedRoute><AddCountry /></ProtectedRoute>} />
-      <Route path="/countries/edit/:id" element={<ProtectedRoute><EditCountry /></ProtectedRoute>} />
-      <Route path="/countries/view/:id" element={<ProtectedRoute><ViewCountry /></ProtectedRoute>} />
+      <Route
+        path="/countries"
+        element={
+          <ProtectedRoute>
+            <CountriesList />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/countries/add"
+        element={
+          <ProtectedRoute>
+            <AddCountry />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/countries/edit/:id"
+        element={
+          <ProtectedRoute>
+            <EditCountry />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/countries/view/:id"
+        element={
+          <ProtectedRoute>
+            <ViewCountry />
+          </ProtectedRoute>
+        }
+      />
 
       {/* Applicants */}
-      <Route path="/applicants" element={<ProtectedRoute><ApplicantsList /></ProtectedRoute>} />
-      <Route path="/applicants/create" element={<ProtectedRoute><CreateApplicant /></ProtectedRoute>} />
-      <Route path="/applicants/edit/:id" element={<ProtectedRoute><EditApplicant /></ProtectedRoute>} />
-      <Route path="/applicants/view/:id" element={<ProtectedRoute><ViewApplicant /></ProtectedRoute>} />
+      <Route
+        path="/applicants"
+        element={
+          <ProtectedRoute>
+            <ApplicantsList />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/applicants/create"
+        element={
+          <ProtectedRoute>
+            <CreateApplicant />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/applicants/edit/:id"
+        element={
+          <ProtectedRoute>
+            <EditApplicant />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/applicants/view/:id"
+        element={
+          <ProtectedRoute>
+            <ViewApplicant />
+          </ProtectedRoute>
+        }
+      />
 
       {/* Agents */}
-      <Route path="/agents" element={<ProtectedRoute><AgentsList /></ProtectedRoute>} />
-      <Route path="/agents/create" element={<ProtectedRoute><CreateAgent /></ProtectedRoute>} />
-      <Route path="/agents/edit/:id" element={<ProtectedRoute><EditAgent /></ProtectedRoute>} />
-      <Route path="/agents/view/:id" element={<ProtectedRoute><ViewAgent /></ProtectedRoute>} />
+      <Route
+        path="/agents"
+        element={
+          <ProtectedRoute>
+            <AgentsList />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/agents/create"
+        element={
+          <ProtectedRoute>
+            <CreateAgent />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/agents/edit/:id"
+        element={
+          <ProtectedRoute>
+            <EditAgent />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/agents/view/:id"
+        element={
+          <ProtectedRoute>
+            <ViewAgent />
+          </ProtectedRoute>
+        }
+      />
 
       {/* Records */}
-      <Route path="/records" element={<ProtectedRoute><RecordsList /></ProtectedRoute>} />
-      <Route path="/records/add" element={<ProtectedRoute><AddRecord /></ProtectedRoute>} />
-      <Route path="/records/edit/:id" element={<ProtectedRoute><EditRecord /></ProtectedRoute>} />
-      <Route path="/appointments" element={<ProtectedRoute><Appointments /></ProtectedRoute>} />
-
+      <Route
+        path="/records"
+        element={
+          <ProtectedRoute>
+            <RecordsList />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/records/add"
+        element={
+          <ProtectedRoute>
+            <AddRecord />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/records/edit/:id"
+        element={
+          <ProtectedRoute>
+            <EditRecord />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/appointments"
+        element={
+          <ProtectedRoute>
+            <Appointments />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/printanalysis"
+        element={
+          <ProtectedRoute>
+            <Depth />
+          </ProtectedRoute>
+        }
+      />
       {/* PCC Records */}
-      <Route path="/pcc" element={<ProtectedRoute><PCCRecords /></ProtectedRoute>} />
-      <Route path="/pcc/add" element={<ProtectedRoute><AddPCCRecord /></ProtectedRoute>} />
-      <Route path="/pcc/edit/:id" element={<ProtectedRoute><EditPCCRecord /></ProtectedRoute>} />
-<Route path="/passport" element={<ProtectedRoute><PassportValidityCheck /></ProtectedRoute>} />
-<Route path="/statussearch" element={<ProtectedRoute><Status /></ProtectedRoute>} />
+      <Route
+        path="/pcc"
+        element={
+          <ProtectedRoute>
+            <PCCRecords />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/pcc/add"
+        element={
+          <ProtectedRoute>
+            <AddPCCRecord />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/pcc/edit/:id"
+        element={
+          <ProtectedRoute>
+            <EditPCCRecord />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/passport"
+        element={
+          <ProtectedRoute>
+            <PassportValidityCheck />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/statussearch"
+        element={
+          <ProtectedRoute>
+            <Status />
+          </ProtectedRoute>
+        }
+      />
       {/* Admin Tools */}
-       <Route path="/admin" element={<ProtectedRoute roles={['admin']}><AdminTools /></ProtectedRoute>} />
-      <Route path="/admin/payments" element={<ProtectedRoute roles={['admin']}><PaymentManagement /></ProtectedRoute>} />
-      <Route path="/admin/users" element={<ProtectedRoute roles={['admin']}><UserManagement /></ProtectedRoute>} />
-      <Route path="/admin/payments-view" element={<ProtectedRoute roles={['admin']}><Payment /></ProtectedRoute>} />
+      <Route
+        path="/admin"
+        element={
+          <ProtectedRoute roles={["admin"]}>
+            <AdminTools />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/payments"
+        element={
+          <ProtectedRoute roles={["admin"]}>
+            <PaymentManagement />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/users"
+        element={
+          <ProtectedRoute roles={["admin"]}>
+            <UserManagement />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/payments-view"
+        element={
+          <ProtectedRoute roles={["admin"]}>
+            <Payment />
+          </ProtectedRoute>
+        }
+      />
 
       {/* Catch-all */}
       <Route path="*" element={<NotFound />} />
-      <Route path="/readycandidates" element={<ProtectedRoute><Ready /></ProtectedRoute>}/>
+      <Route
+        path="/readycandidates"
+        element={
+          <ProtectedRoute>
+            <Ready />
+          </ProtectedRoute>
+        }
+      />
     </Routes>
   );
 }
