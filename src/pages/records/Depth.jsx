@@ -5,9 +5,9 @@ import "./Depth.css"; // Import the CSS file
 const getDayDiff = (dateStr) => {
   if (!dateStr) return null;
   const today = new Date();
-  today.setHours(0,0,0,0);
+  today.setHours(0, 0, 0, 0);
   const target = new Date(dateStr);
-  target.setHours(0,0,0,0);
+  target.setHours(0, 0, 0, 0);
   if (target >= today) return null;
   return Math.floor((today - target) / (1000 * 60 * 60 * 24));
 };
@@ -45,6 +45,11 @@ const Depth = () => {
 
   const soonRef = useRef();
   const delayRef = useRef();
+
+  // Additions for "Print All Office Applicants"
+  const allApplicantsRef = useRef();
+  const [showAllApplicants, setShowAllApplicants] = useState(false);
+  // ---
 
   useEffect(() => {
     const fetchAll = async () => {
@@ -94,7 +99,7 @@ const Depth = () => {
       submitted: rec.submittedAt ? new Date(rec.submittedAt).toLocaleDateString() : "-",
       physical: rec.physical ? new Date(rec.physical).toLocaleDateString() : "-",
     };
-    
+
     if (diff >= 20 && diff <= 45) {
       releasingSoon.push(row);
     }
@@ -105,6 +110,34 @@ const Depth = () => {
 
   const soonTable = showAllSoon ? releasingSoon : releasingSoon.slice(0, 10);
   const delayTable = showAllDelays ? delays : delays.slice(0, 10);
+
+  // ----- NEW: For Print All Office Applicants -----
+  // Helper to get latest progress for an applicant
+  const getLatestProgress = (applicantId) => {
+    // Find latest record for this applicant
+    const recordsForApplicant = records
+      .filter(r => String(r.applicant?._id || r.applicant) === String(applicantId));
+    if (!recordsForApplicant.length) return "-";
+    // Sort by latest date (physical, submittedAt, createdAt)
+    recordsForApplicant.sort((a, b) => {
+      const aDate = new Date(a.physical || a.submittedAt || a.createdAt);
+      const bDate = new Date(b.physical || b.submittedAt || b.createdAt);
+      return bDate - aDate;
+    });
+    return recordsForApplicant[0].progressStatus || "-";
+  };
+
+  // Filter applicants: Exclude those whose agent is "AMRIT POKHREL"
+  const filteredApplicants = applicants.filter(a => {
+    const agentName = a.agent?.name || a.agent || "";
+    return agentName.trim().toLowerCase() !== "amrit pokhrel";
+  });
+
+  const allApplicantsTable = showAllApplicants
+    ? filteredApplicants
+    : filteredApplicants.slice(0, 10);
+
+  // ----- END NEW -----
 
   return (
     <div className="depth-container">
@@ -213,6 +246,55 @@ const Depth = () => {
               </button>
             )}
           </div>
+
+          {/* ---- NEW SECTION: Print All Office Applicants ---- */}
+          <div className="table-section">
+            <h2>Print All Office Applicants</h2>
+            <div style={{ display: "flex", gap: "10px", marginBottom: "10px" }}>
+              <button className="toggle-btn" onClick={() => setShowAllApplicants(s => !s)}>
+                {showAllApplicants
+                  ? (filteredApplicants.length > 10 ? "Show Less" : "View All")
+                  : (filteredApplicants.length > 10 ? "View All" : "View All")}
+              </button>
+              <button className="print-btn" onClick={() => printTable(allApplicantsRef)}>
+                Print All
+              </button>
+            </div>
+            <div className="table-responsive">
+              <div ref={allApplicantsRef}>
+                <table className="depth-table">
+                  <thead>
+                    <tr>
+                      <th>SN</th>
+                      <th>Name</th>
+                      <th>Country</th>
+                      <th>Agent</th>
+                      <th>Progress</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {allApplicantsTable.length === 0 ? (
+                      <tr>
+                        <td colSpan={5} className="no-data">No data found</td>
+                      </tr>
+                    ) : (
+                      allApplicantsTable.map((a, i) => (
+                        <tr key={a._id}>
+                          <td>{i + 1}</td>
+                          <td>{a.name || "-"}</td>
+                          <td>{a.country?.name || a.country || "-"}</td>
+                          <td>{a.agent?.name || a.agent || "-"}</td>
+                          <td>{getLatestProgress(a._id)}</td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          {/* ---- END NEW SECTION ---- */}
+
         </>
       )}
     </div>
