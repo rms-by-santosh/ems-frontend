@@ -7,13 +7,15 @@ export default function ViewAgent() {
   const { id } = useParams();
   const [agent, setAgent] = useState(null);
   const [applicants, setApplicants] = useState([]);
+  const [records, setRecords] = useState([]);
   const [loadingAgent, setLoadingAgent] = useState(true);
   const [loadingApplicants, setLoadingApplicants] = useState(true);
+  const [loadingRecords, setLoadingRecords] = useState(true);
   const [errorAgent, setErrorAgent] = useState("");
   const [errorApplicants, setErrorApplicants] = useState("");
-  const [showAll, setShowAll] = useState(false); // --- new
+  const [errorRecords, setErrorRecords] = useState("");
+  const [showAll, setShowAll] = useState(false);
 
-  // Ref for print section
   const printRef = useRef();
 
   // Print only the table section
@@ -52,27 +54,32 @@ export default function ViewAgent() {
       try {
         setLoadingAgent(true);
         setLoadingApplicants(true);
+        setLoadingRecords(true);
 
-        const [agentRes, applicantsRes] = await Promise.all([
+        const [agentRes, applicantsRes, recordsRes] = await Promise.all([
           axios.get(`${import.meta.env.VITE_API_URL}/agents/${id}`),
-          axios.get(`${import.meta.env.VITE_API_URL}/applicants?agent=${id}`)
+          axios.get(`${import.meta.env.VITE_API_URL}/applicants?agent=${id}`),
+          axios.get(`${import.meta.env.VITE_API_URL}/records`),
         ]);
 
         setAgent(agentRes.data);
         setApplicants(applicantsRes.data);
+        setRecords(recordsRes.data);
       } catch (err) {
         setErrorAgent("Failed to load agent data");
         setErrorApplicants("Failed to load applicants data");
+        setErrorRecords("Failed to load records data");
       } finally {
         setLoadingAgent(false);
         setLoadingApplicants(false);
+        setLoadingRecords(false);
       }
     };
 
     fetchData();
   }, [id]);
 
-  if (loadingAgent) return <div className="loading-spinner"></div>;
+  if (loadingAgent || loadingApplicants || loadingRecords) return <div className="loading-spinner"></div>;
   if (errorAgent) return <div className="error-message">{errorAgent}</div>;
 
   // Show only 10 applicants by default
@@ -80,6 +87,15 @@ export default function ViewAgent() {
     showAll || applicants.length <= 10
       ? applicants
       : applicants.slice(0, 10);
+
+  // Helper: Find record for applicant
+  const getProgress = (applicantId) => {
+    const record = records.find(
+      (rec) =>
+        String(rec.applicant?._id || rec.applicant) === String(applicantId)
+    );
+    return record ? record.progressStatus || "-" : "-";
+  };
 
   return (
     <div className="agent-container">
@@ -131,9 +147,7 @@ export default function ViewAgent() {
           🖨️ Print Applicants
         </button>
 
-        {loadingApplicants ? (
-          <div className="loading-spinner small"></div>
-        ) : errorApplicants ? (
+        {errorApplicants ? (
           <div className="error-message">{errorApplicants}</div>
         ) : applicants.length === 0 ? (
           <div className="empty-state">
@@ -143,7 +157,6 @@ export default function ViewAgent() {
             </Link>
           </div>
         ) : (
-          // Only this section is printed!
           <div className="table-container" id="print-table-section" ref={printRef}>
             <table className="applicants-table">
               <thead>
@@ -152,6 +165,7 @@ export default function ViewAgent() {
                   <th>Name</th>
                   <th>Email</th>
                   <th>Phone</th>
+                  <th>Progress</th>
                 </tr>
               </thead>
               <tbody>
@@ -161,6 +175,7 @@ export default function ViewAgent() {
                     <td>{name}</td>
                     <td>{email || "-"}</td>
                     <td>{phone || "-"}</td>
+                    <td>{getProgress(_id)}</td>
                   </tr>
                 ))}
               </tbody>
