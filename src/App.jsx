@@ -34,7 +34,7 @@ import ViewAgent from "./pages/agents/ViewAgent";
 import RecordsList from "./pages/records/RecordsList";
 import AddRecord from "./pages/records/AddRecord";
 import EditRecord from "./pages/records/EditRecord";
-
+import Ready from "./pages/records/Ready";
 // PCC Records
 import PCCRecords from "./pages/pcc/PCCRecords";
 import AddPCCRecord from "./pages/pcc/AddPCCRecord";
@@ -97,6 +97,7 @@ function AppRoutes() {
 
       {/* Catch-all */}
       <Route path="*" element={<NotFound />} />
+      <Route path="/readycandidates" element={<ProtectedRoute><Ready /></ProtectedRoute>}/>
     </Routes>
   );
 }

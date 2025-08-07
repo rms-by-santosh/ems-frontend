@@ -97,19 +97,16 @@ export default function RecordsList() {
     <div className="records-container">
       {/* PCC Records Button at Top */}
       <div style={{ marginBottom: "1rem", gap: "1rem", display: "flex", justifyContent: "flex-end" }}>
-        <Link to="/pcc" className="pcc-records-btn">
-          <button type="button" style={{ padding: "8px 18px", borderRadius: "5px", background: "#2979ff", color: "#fff", border: "none", cursor: "pointer" }}>
-            Go to PCC Records
-          </button>
-        </Link>
-        <Link to="/passport" className="pcc-records-btn">
-          <button type="button" style={{ padding: "8px 18px", borderRadius: "5px", background: "#2979ff", color: "#fff", border: "none", cursor: "pointer" }}>
-            Passport Validity Check
-          </button>
-        </Link>
+        
         <Link to="/statussearch" className="pcc-records-btn">
           <button type="button" style={{ padding: "8px 18px", borderRadius: "5px", background: "#2979ff", color: "#fff", border: "none", cursor: "pointer" }}>
             Search By Status
+          </button>
+        </Link>
+
+        <Link to="/readycandidates" className="pcc-records-btn">
+          <button type="button" style={{ padding: "8px 18px", borderRadius: "5px", background: "#2979ff", color: "#fff", border: "none", cursor: "pointer" }}>
+           View Applicants To Process
           </button>
         </Link>
       </div>
