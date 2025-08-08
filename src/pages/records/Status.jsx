@@ -11,6 +11,8 @@ const progressOptions = [
   "EMBASSY SUBMITTED",
   "APPOINTMENT CNF",
   "INTERVIEW FACED",
+ "MAIL RECEIVED",
+ 
   "VISA APPROVED",
   "VISA REJECTED",
   "LABOR PERMIT PROCESSED",
@@ -64,9 +66,7 @@ export default function Status() {
           rec.progressStatus &&
           rec.progressStatus.toLowerCase() === progress.toLowerCase()
       );
-
-      // 3. For each record, get the applicant object (record.applicant may be an object or id)
-      // If populated, applicant is an object; else you may need a second fetch
+      // 3. Save filtered records
       setResults(filteredRecords);
     } catch {
       setResults([]);
@@ -74,19 +74,21 @@ export default function Status() {
       setLoading(false);
     }
   };
-function getCountryName(record) {
-  const applicant = record.applicant;
-  if (!applicant) return "-";
-  // If applicant.country is populated object
-  if (typeof applicant.country === "object" && applicant.country !== null) {
-    return applicant.country.name || "-";
+
+  function getCountryName(record) {
+    const applicant = record.applicant;
+    if (!applicant) return "-";
+    // If applicant.country is populated object
+    if (typeof applicant.country === "object" && applicant.country !== null) {
+      return applicant.country.name || "-";
+    }
+    // If applicant.country is string ID, lookup from countries dictionary
+    if (typeof applicant.country === "string") {
+      return countries[applicant.country] || "-";
+    }
+    return "-";
   }
-  // If applicant.country is string ID, lookup from countries dictionary
-  if (typeof applicant.country === "string") {
-    return countries[applicant.country] || "-";
-  }
-  return "-";
-}
+
   // Helper to get applicant details safely
   function getApplicantField(record, field) {
     if (!record.applicant) return "-";
@@ -205,14 +207,11 @@ function getCountryName(record) {
                         cursor: "pointer",
                       }}
                       onClick={() => {
-                        const applicantId =
-                          typeof rec.applicant === "object"
-                            ? rec.applicant._id
-                            : rec.applicant;
-                        navigate(`/applicants/edit/${applicantId}`);
+                        // ✅ Edit the RECORD, not the applicant
+                        navigate(`/records/edit/${rec._id}`);
                       }}
                     >
-                      Edit
+                      Edit Record
                     </button>
                   </td>
                 </tr>

@@ -124,8 +124,7 @@ export default function EditApplicant() {
               <option value="">-- Select --</option>
               <option value="single">Single</option>
               <option value="married">Married</option>
-              <option value="divorced">Divorced</option>
-              <option value="widowed">Widowed</option>
+              
             </select>
           </div>
 

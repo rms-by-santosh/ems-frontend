@@ -54,13 +54,14 @@ import Status from "./pages/records/Status";
 import Depth from "./pages/records/Depth";
 //appointments
 import Appointments from "./pages/records/Appointments";
-
+import PublicAgent from "./pages/agents/PublicAgent";
 function AppRoutes() {
   const { user } = useAuth();
 
   return (
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/publicagent" element={<PublicAgent />} />
       <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
       <Route
         path="/register"

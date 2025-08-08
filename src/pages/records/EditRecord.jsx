@@ -146,8 +146,10 @@ export default function EditRecord() {
               <option value="EMBASSY SUBMITTED">EMBASSY SUBMITTED</option>
               <option value="APPOINTMENT CNF">APPOINTMENT CNF</option>
               <option value="INTERVIEW FACED">INTERVIEW FACED</option>
-              <option value="VISA APPROVED">VISA APPROVED</option>
-              <option value="VISA REJECTED">VISA REJECTED</option>
+              <option value="MAIL RECEIVED"> MAIL RECEIVED </option>
+              <option value="VISA APPROVED"> APPROVED </option>
+              <option value="VISA REJECTED">REJECTED </option>
+         
               <option value="LABOR PERMIT PROCESSED">LABOR PERMIT PROCESSED</option>
               <option value="LABOR PERMIT DISPATCHED">LABOR PERMIT DISPATCHED</option>
               <option value="CANCELLED SELF">SELF CANCEL</option>
