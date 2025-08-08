@@ -283,3 +283,9 @@
 
 
 /* home end */
+.publicagentinput{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left:18%;
+}

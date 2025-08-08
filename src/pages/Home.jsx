@@ -81,12 +81,12 @@ export default function Home() {
             noValidate
           >
             <div className="publicagentinput">
-              <div>
-                <p style={{ margin: 0 }}>
+              
+                <p style={{   }}>
                   Please log in to access the system features.
                 </p>
-              </div>
-              <div>
+              
+              
               <h3>If you are agent Enter your Email </h3>
                 <input
                   type="email"
@@ -111,7 +111,7 @@ export default function Home() {
                 >
                   Get Access
                 </button>
-              </div>
+              
             </div>
 
             {publicError && (
