@@ -11,8 +11,7 @@ const progressOptions = [
   "EMBASSY SUBMITTED",
   "APPOINTMENT CNF",
   "INTERVIEW FACED",
- "MAIL RECEIVED",
- 
+  "MAIL RECEIVED",
   "VISA APPROVED",
   "VISA REJECTED",
   "LABOR PERMIT PROCESSED",
@@ -29,7 +28,6 @@ export default function Status() {
   const [countries, setCountries] = useState({});
   const navigate = useNavigate();
 
-  // Fetch agent/country lookups only once
   useEffect(() => {
     const fetchMeta = async () => {
       try {
@@ -38,15 +36,11 @@ export default function Status() {
           axios.get(`${import.meta.env.VITE_API_URL}/countries`),
         ]);
         const agentsMap = {};
-        agentsRes.data.forEach((a) => {
-          agentsMap[a._id] = a.name;
-        });
+        agentsRes.data.forEach((a) => (agentsMap[a._id] = a.name));
         setAgents(agentsMap);
 
         const countriesMap = {};
-        countriesRes.data.forEach((c) => {
-          countriesMap[c._id] = c.name;
-        });
+        countriesRes.data.forEach((c) => (countriesMap[c._id] = c.name));
         setCountries(countriesMap);
       } catch {}
     };
@@ -58,16 +52,13 @@ export default function Status() {
     setLoading(true);
     setResults([]);
     try {
-      // 1. Get all records (populated with applicant info)
       const res = await axios.get(`${import.meta.env.VITE_API_URL}/records`);
-      // 2. Filter records by progressStatus (case-insensitive)
-      const filteredRecords = res.data.filter(
+      const filtered = res.data.filter(
         (rec) =>
           rec.progressStatus &&
           rec.progressStatus.toLowerCase() === progress.toLowerCase()
       );
-      // 3. Save filtered records
-      setResults(filteredRecords);
+      setResults(filtered);
     } catch {
       setResults([]);
     } finally {
@@ -78,18 +69,15 @@ export default function Status() {
   function getCountryName(record) {
     const applicant = record.applicant;
     if (!applicant) return "-";
-    // If applicant.country is populated object
     if (typeof applicant.country === "object" && applicant.country !== null) {
       return applicant.country.name || "-";
     }
-    // If applicant.country is string ID, lookup from countries dictionary
     if (typeof applicant.country === "string") {
       return countries[applicant.country] || "-";
     }
     return "-";
   }
 
-  // Helper to get applicant details safely
   function getApplicantField(record, field) {
     if (!record.applicant) return "-";
     if (typeof record.applicant === "object") {
@@ -97,6 +85,57 @@ export default function Status() {
     }
     return "-";
   }
+
+  // ✅ New: Print table in popup without Agent column
+  const handlePrint = () => {
+    const table = document.getElementById("status-table");
+    if (!table) return;
+
+    // Clone table without Agent column
+    const clonedTable = table.cloneNode(true);
+    const headerCells = clonedTable.querySelectorAll("th");
+    const agentIndex = Array.from(headerCells).findIndex(th =>
+      th.textContent.trim().toLowerCase() === "agent"
+    );
+
+    if (agentIndex >= 0) {
+      clonedTable.querySelectorAll("tr").forEach(row => {
+        if (row.cells[agentIndex]) {
+          row.deleteCell(agentIndex);
+        }
+      });
+    }
+
+    const printWindow = window.open("", "_blank");
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Print Table</title>
+          <style>
+            table {
+              width: 100%;
+              border-collapse: collapse;
+            }
+            th, td {
+              border: 1px solid #ddd;
+              padding: 8px;
+            }
+            th {
+              background: #4895ef;
+              color: #fff;
+            }
+          </style>
+        </head>
+        <body>
+          ${clonedTable.outerHTML}
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+    printWindow.close();
+  };
 
   return (
     <div
@@ -112,8 +151,9 @@ export default function Status() {
       <h2>Search By Progress</h2>
       <form
         onSubmit={handleSearch}
+        className="no-print"
         style={{
-          marginBottom: 32,
+          marginBottom: 16,
           display: "flex",
           alignItems: "center",
           gap: 12,
@@ -146,8 +186,26 @@ export default function Status() {
         </button>
       </form>
 
+      {/* ✅ New Print Button */}
+      <button
+        className="no-print"
+        onClick={handlePrint}
+        style={{
+          marginBottom: 12,
+          padding: "8px 24px",
+          background: "#38b000",
+          color: "#fff",
+          border: 0,
+          borderRadius: 4,
+          cursor: "pointer",
+        }}
+      >
+        Print Table (Without Agent)
+      </button>
+
       <div style={{ overflowX: "auto" }}>
         <table
+          id="status-table"
           style={{
             width: "100%",
             borderCollapse: "collapse",
@@ -198,6 +256,7 @@ export default function Status() {
                   </td>
                   <td style={{ padding: 10 }}>
                     <button
+                      className="no-print"
                       style={{
                         background: "#4895ef",
                         color: "#fff",
@@ -206,10 +265,7 @@ export default function Status() {
                         borderRadius: 4,
                         cursor: "pointer",
                       }}
-                      onClick={() => {
-                        // ✅ Edit the RECORD, not the applicant
-                        navigate(`/records/edit/${rec._id}`);
-                      }}
+                      onClick={() => navigate(`/records/edit/${rec._id}`)}
                     >
                       Edit Record
                     </button>
